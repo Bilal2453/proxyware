@@ -14,8 +14,8 @@ or if the Git install PR was merged to Lit:
 ## Configuring it
 
 Open `proxyware.lua` and edit the constants at the top, available options are:
-| | | |
-| - | - |
+|  |   |   |
+| - | - | - |
 | PORT | number | The port on which this server will start listening |
 | DOMAIN | string | On which interface/domain the server will listen on |
 | LOCAL_HOST | string | The IP of the server on which the instances are hosted |

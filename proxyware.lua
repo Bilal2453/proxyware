@@ -118,7 +118,7 @@ local function handler(initial_err)
   -- failed to read, or client sent an empty request
   if not chunk or chunk == true then
     if err_msg then
-      stdout:write(c('failure', 'Error while reading request from host: ' .. err_msg))
+      stdout:write(c('failure', 'Error while reading request from host: ' .. err_msg) .. '\n')
     end
     return write(client_socket, true)
   end
@@ -151,7 +151,7 @@ local function handler(initial_err)
   local subdomain_socket = uv.new_tcp()
   local success, fail_msg = await(subdomain_socket, 'connect', LOCAL_HOST, subdomain_port)
   if not success then
-    stdout:write(c('failure', 'Error while trying to establish a connection to ' .. subdomain_uri .. ': ' .. fail_msg))
+    stdout:write(c('failure', 'Error while trying to establish a connection to ' .. subdomain_uri .. ': ' .. fail_msg) .. '\n')
     return write(client_socket, true, httpRes(500, fail_msg))
   end
 
@@ -190,7 +190,7 @@ local function handler(initial_err)
 end
 
 
-stdout:write(c('success', 'Proxying ' .. PUBLIC_DOMAIN .. ':' .. PORT .. '\n\n'))
+stdout:write(c('success', 'Proxying ' .. PUBLIC_DOMAIN .. ':' .. PORT) .. '\n\n')
 
 local success, err = pcall(function()
   -- create the server TCP socket and bind it to the domain:port
@@ -205,5 +205,5 @@ end)
 
 -- failed to init server? or some other unexpected error?
 if not success then
-  stdout:write(c('failure', 'An error has occurred: ' .. err))
+  stdout:write(c('failure', 'An error has occurred: ' .. err) .. '\n')
 end

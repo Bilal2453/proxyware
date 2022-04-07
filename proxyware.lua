@@ -8,7 +8,9 @@ local c = require 'pretty-print'.colorize
 local PORT          = 80          -- which port to listen on?
 local DOMAIN        = '0.0.0.0'   -- which domain/loopback to listen on?
 local LOCAL_HOST    = '127.0.0.1' -- the machine's address on which to route to
-local PUBLIC_DOMAIN = 'nas.local' -- the public address of the server (mainly used for logging and reporting purposes)
+local PUBLIC_DOMAIN = 'nas.local' -- the public address of the server (used for logging and reporting purposes)
+
+local OVERWRITE_HOST = false -- shall we use a different Host header?
 
 -- list the available subdomains with their ports
 local subdomains_map = {
@@ -145,7 +147,9 @@ local function handler(initial_err)
 
   -- replace the host header with the uri we are supposedly using
   -- (we are actually using LOCAL_HOST to connect, but we want it to look similar to original header)
-  chunk = chunk:gsub('[Hh]ost: .-\r?\n', 'Host: ' .. subdomain_uri .. '\r\n')
+  if OVERWRITE_HOST then
+    chunk = chunk:gsub('[Hh]ost: .-\r?\n', 'Host: ' .. subdomain_uri .. '\r\n')
+  end
 
   -- establish a TCP connection to the subdomain server we're proxying to
   local subdomain_socket = uv.new_tcp()
@@ -207,3 +211,4 @@ end)
 if not success then
   stdout:write(c('failure', 'An error has occurred: ' .. err) .. '\n')
 end
+
